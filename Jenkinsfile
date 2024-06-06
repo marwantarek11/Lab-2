@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script { 
                     dir('oc') {
-                        editNewImage(imageName)
+                        editDeploymentYaml(imageName)
                     }
                 }
             }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script { 
                     dir('oc') {
-                        deployOnOc(openshiftCredentialsID, nameSpace, clusterUrl)
+                        deployTo-oc(openshiftCredentialsID, nameSpace, clusterUrl)
                     }
                 }
             }
