@@ -1,12 +1,12 @@
-@Library('Oc-Shared-Library')_
+@Library('shared-library-lab.oit')
 pipeline {
     agent any
     
     environment {
         dockerHubCredentialsID	            = 'DockerHub'  		    			      // DockerHub credentials ID.
-        imageName   		            = 'alikhames/oc-python-app'     			// DockerHub repo/image name.
+        imageName   		            = 'marwantarek11/oc-python-app'     			// DockerHub repo/image name.
 	openshiftCredentialsID	            = 'openshift'	    				// KubeConfig credentials ID.   
-	nameSpace                           = 'alikhames'
+	nameSpace                           = 'marwantarek'
 	clusterUrl                          = 'https://api.ocp-training.ivolve-test.com:6443'    
     }
     
@@ -54,11 +54,20 @@ stages {
     }
 
     post {
+        always {
+            script {
+                echo 'This runs always'
+            }
+        }
         success {
-            echo "${JOB_NAME}-${BUILD_NUMBER} pipeline succeeded"
+            script {
+                echo 'This runs on success'
+            }
         }
         failure {
-            echo "${JOB_NAME}-${BUILD_NUMBER} pipeline failed"
+            script {
+                echo 'This runs on failure'
+            }
         }
     }
 }
