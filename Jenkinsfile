@@ -1,56 +1,48 @@
-@Library('shared-library-lab.oit')
+@Library('shared-library-lab.oit') _
 pipeline {
     agent any
     
     environment {
-        dockerHubCredentialsID	            = 'DockerHub'  		    			      // DockerHub credentials ID.
-        imageName   		            = 'marwantarek11/oc-python-app'     			// DockerHub repo/image name.
-	openshiftCredentialsID	            = 'openshift'	    				// KubeConfig credentials ID.   
-	nameSpace                           = 'marwantarek'
-	clusterUrl                          = 'https://api.ocp-training.ivolve-test.com:6443'    
+        dockerHubCredentialsID = 'DockerHub'            // DockerHub credentials ID.
+        imageName              = 'marwantarek11/oc-python-app'  // DockerHub repo/image name.
+        openshiftCredentialsID = 'openshift'            // KubeConfig credentials ID.   
+        nameSpace              = 'marwantarek'
+        clusterUrl             = 'https://api.ocp-training.ivolve-test.com:6443'    
     }
     
-          
-stages {       
-       
+    stages {
         stage('Build Docker image from Dockerfile in GitHub') {
             steps {
                 script {
-                 	
-                 		buildDockerImage("${imageName}")
-                      
+                    buildDockerImage(imageName)
                 }
             }
         }
         stage('Push image to Docker hub') {
             steps {
                 script {
-                 	
-                 		pushDockerImage("${dockerHubCredentialsID}", "${imageName}")
-                      
+                    pushDockerImage(dockerHubCredentialsID, imageName)
                 }
             }
         }
-
         stage('Edit new image in deployment.yml file') {
             steps {
                 script { 
-                	dir('oc') {
-				        editNewImage("${imageName}")
-			}
+                    dir('oc') {
+                        editNewImage(imageName)
+                    }
                 }
             }
         }
-	stage('Deploy on OpenShift Cluster') {
-	     steps {
-	         script { 
-			dir('oc') {
-	                        
-					deployOnOc("${openshiftCredentialsID}", "${nameSpace}", "${clusterUrl}")
-				}
-	                }
-	            }
-	        }
+        stage('Deploy on OpenShift Cluster') {
+            steps {
+                script { 
+                    dir('oc') {
+                        deployOnOc(openshiftCredentialsID, nameSpace, clusterUrl)
+                    }
+                }
+            }
+        }
     }
 
     post {
