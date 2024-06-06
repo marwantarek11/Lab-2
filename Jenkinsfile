@@ -1,4 +1,4 @@
-@Library('shared-library-lab.oit') _
+@Library('shared-library-lab') _
 pipeline {
     agent any
     
