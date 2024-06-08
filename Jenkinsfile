@@ -1,15 +1,14 @@
 @Library('Jenkins-Shared-Library') _
+
 pipeline {
     agent any
-    
     environment {
-        dockerHubCredentialsID = 'DockerHub'            // DockerHub credentials ID.
-        imageName              = 'marwantarek11/oc-python-app'  // DockerHub repo/image name.
-        openshiftCredentialsID = 'openshift'            // KubeConfig credentials ID.   
-        nameSpace              = 'marwantarek'
-        clusterUrl             = 'https://api.ocp-training.ivolve-test.com:6443'    
+        dockerHubCredentialsID = 'DockerHub'
+        imageName = 'marwantarek11/oc-python-app'
+        openshiftCredentialsID = 'openshift'
+        nameSpace = 'marwantarek'
+        clusterUrl = 'https://api.ocp-training.ivolve-test.com:6443'
     }
-    
     stages {
         stage('Build Docker image from Dockerfile in GitHub') {
             steps {
@@ -27,7 +26,7 @@ pipeline {
         }
         stage('Edit new image in deployment.yml file') {
             steps {
-                script { 
+                script {
                     dir('oc') {
                         editDeploymentYaml(imageName)
                     }
@@ -36,15 +35,14 @@ pipeline {
         }
         stage('Deploy on OpenShift Cluster') {
             steps {
-                script { 
+                script {
                     dir('oc') {
-                       deployOnOc(openshiftCredentialsID, nameSpace, clusterUrl)
+                        deployOnOc(openshiftCredentialsID, nameSpace, clusterUrl)
                     }
                 }
             }
         }
     }
-
     post {
         always {
             script {
