@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     dir('oc') {
-                        deployTo-oc(openshiftCredentialsID, nameSpace, clusterUrl)
+                        deployTooc(openshiftCredentialsID, nameSpace, clusterUrl)
                     }
                 }
             }
